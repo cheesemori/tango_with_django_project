@@ -43,7 +43,7 @@ def about(request):
     return render(request, 'rango/about.html', {'boldmessage': 'This is the about page.'})
 
 
-@login_required
+# @login_required
 def add_category(request):
     form = CategoryForm()
 
@@ -59,7 +59,7 @@ def add_category(request):
     return render(request, 'rango/add_category.html', {'form': form})
 
 
-@login_required
+# @login_required
 def add_page(request, category_name_slug):
     try:
         category = Category.objects.get(slug=category_name_slug)
