@@ -20,6 +20,10 @@ def index(request):
 
     context_dict['pages'] = page_list
 
+    num_visits = request.session.get('num_visits', 0)
+    request.session['num_visits'] = num_visits + 1
+    context_dict['visits'] = num_visits
+
     return render(request, 'rango/index.html', context=context_dict)
 
 
@@ -43,7 +47,7 @@ def about(request):
     return render(request, 'rango/about.html', {'boldmessage': 'This is the about page.'})
 
 
-# @login_required
+@login_required
 def add_category(request):
     form = CategoryForm()
 
@@ -59,7 +63,7 @@ def add_category(request):
     return render(request, 'rango/add_category.html', {'form': form})
 
 
-# @login_required
+@login_required
 def add_page(request, category_name_slug):
     try:
         category = Category.objects.get(slug=category_name_slug)
