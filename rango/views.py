@@ -7,6 +7,7 @@ from django.urls import reverse
 from rango.forms import UserForm, UserProfileForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from datetime import datetime
 
 
 def index(request):
@@ -17,15 +18,34 @@ def index(request):
     context_dict = {}
     context_dict['boldmessage'] = 'Crunchy, creamy, cookie, candy, cupcake!'
     context_dict['categories'] = category_list
-
     context_dict['pages'] = page_list
 
-    num_visits = request.session.get('num_visits', 0)
-    request.session['num_visits'] = num_visits + 1
-    context_dict['visits'] = num_visits
+
+    visits = request.session.get('visits', 1)
+    last_visit = request.session.get('last_visit')
+    reset_last_visit_time = False
+
+    if last_visit:
+        try:
+            last_visit_time = datetime.strptime(last_visit[:-7], "%Y-%m-%d %H:%M:%S")
+            if (datetime.now() - last_visit_time).days > 0:
+                visits = visits + 1
+                reset_last_visit_time = True
+        except:
+            reset_last_visit_time = True
+    else:
+        reset_last_visit_time = True
+    if reset_last_visit_time:
+        request.session['last_visit'] = str(datetime.now())
+        request.session['visits'] = visits
 
     return render(request, 'rango/index.html', context=context_dict)
 
+def about(request):
+    visits = request.session.get('visits', 1)
+    context_dict = {'boldmessage': 'This is the about page.'}
+    context_dict['visits'] = visits
+    return render(request, 'rango/about.html', context=context_dict)
 
 def show_category(request, category_name_slug):
     context_dict = {}
@@ -43,11 +63,6 @@ def show_category(request, category_name_slug):
 
     return render(request, 'rango/category.html', context=context_dict)
 
-def about(request):
-    num_visits = request.session.get('num_visits', 0)
-    context_dict = {'boldmessage': 'This is the about page.'}
-    context_dict['visits'] = num_visits
-    return render(request, 'rango/about.html', context=context_dict)
 
 
 @login_required
