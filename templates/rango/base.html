@@ -15,10 +15,10 @@
                         <li>howdy {{ user.username }}!</li>
                         <li><a href="{% url 'rango:restricted' %}">Restricted Page</a></li>
                         <li><a href="{% url 'rango:add_category' %}">Add a New Category</a></li>
-                        <li><a href="{% url 'rango:logout' %}">Logout</a></li>
+                        <li><a href="{% url 'auth_logout' %}">Logout</a></li>
                     {% else %}
-                        <li><a href="{% url 'rango:register' %}">Sign Up</a></li>
-                        <li><a href="{% url 'rango:login' %}">Login</a></li>
+                        <li><a href="{% url 'registration_register' %}">Sign Up</a></li>
+                        <li><a href="{% url 'auth_login' %}">Login</a></li>
                     {% endif %}
                 </ul>
             {% endblock %}
