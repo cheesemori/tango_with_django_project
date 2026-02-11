@@ -44,7 +44,10 @@ def show_category(request, category_name_slug):
     return render(request, 'rango/category.html', context=context_dict)
 
 def about(request):
-    return render(request, 'rango/about.html', {'boldmessage': 'This is the about page.'})
+    num_visits = request.session.get('num_visits', 0)
+    context_dict = {'boldmessage': 'This is the about page.'}
+    context_dict['visits'] = num_visits
+    return render(request, 'rango/about.html', context=context_dict)
 
 
 @login_required
@@ -153,3 +156,7 @@ def user_logout(request):
 
     logout(request)
     return redirect(reverse('rango:index'))
+
+@login_required
+def restricted(request):
+    return render(request, 'rango/restricted.html', {})
